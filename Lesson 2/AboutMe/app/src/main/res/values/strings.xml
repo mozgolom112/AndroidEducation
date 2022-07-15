@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">About Me</string>
     <string name="name">Nikita Golovanov</string>
+    <string name="content_discription_yellow_star">Yellow star</string>
+    <string name="bio">I am a 1st year master student. I am 22 years old. At the institute, he received the basics in several programming languages, database development and network technologies. In the second half of the 2nd course there was a subject devoted to the basics of developing client-server applications. On it, I realized that I like to learn everything through practice. As a first job, I decided to get a job as a tutor. On it I was able to acquire soft skills.
+\n\nIn my 3rd year, I completed an internship at the Sberbank AR/VR laboratory, where I gained basic knowledge of mobile development. Next, I immersed myself in a graduate student project related to computer vision. As it turned out, this was a turning point in my studies, which would later result in a grant project. Thanks to him, I gained valuable experience in team management, development and communication with the customer. He entered the magistracy, continued to work on the project, immersed himself in his studies and simultaneously worked at the school.
+\n\nI will say briefly about my hobbies: I like swimming, playing hockey and skiing.</string>
 </resources>
