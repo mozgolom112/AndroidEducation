@@ -15,7 +15,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    //Необходимо для использования data binding
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
