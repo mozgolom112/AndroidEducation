@@ -19,7 +19,7 @@ class TitleFragment : Fragment() {
             inflater, R.layout.fragment_title, container, false
         )
         binding.btnPlay.setOnClickListener {
-            it.findNavController().navigate(R.id.actionTitleFragmentToGameFragment)
+            it.findNavController().navigate(TitleFragmentDirections.actionTitleFragmentToGameFragment())
         }
         //Add menu
         setHasOptionsMenu(true)
