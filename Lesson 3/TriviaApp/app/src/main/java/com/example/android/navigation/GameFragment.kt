@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.example.android.navigation.databinding.FragmentGameBinding
 
 class GameFragment : Fragment() {
@@ -75,16 +76,16 @@ class GameFragment : Fragment() {
         binding.game = this
 
         // Set the onClickListener for the submitButton
-        binding.submitButton.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
+        binding.btnSubmit.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
         { view: View ->
-            val checkedId = binding.questionRadioGroup.checkedRadioButtonId
+            val checkedId = binding.radiogrpQuestion.checkedRadioButtonId
             // Do nothing if nothing is checked (id == -1)
             if (-1 != checkedId) {
                 var answerIndex = 0
                 when (checkedId) {
-                    R.id.secondAnswerRadioButton -> answerIndex = 1
-                    R.id.thirdAnswerRadioButton -> answerIndex = 2
-                    R.id.fourthAnswerRadioButton -> answerIndex = 3
+                    R.id.rbtnSecondAnswer -> answerIndex = 1
+                    R.id.rbtnThirdAnswer -> answerIndex = 2
+                    R.id.rbtnFourthAnswer -> answerIndex = 3
                 }
                 // The first answer in the original question is always the correct one, so if our
                 // answer matches, we have the correct answer.
@@ -97,9 +98,11 @@ class GameFragment : Fragment() {
                         binding.invalidateAll()
                     } else {
                         // We've won!  Navigate to the gameWonFragment.
+                        view.findNavController().navigate(R.id.actionGameFragmentToGameWonFragment)
                     }
                 } else {
                     // Game over! A wrong answer sends us to the gameOverFragment.
+                    view.findNavController().navigate(R.id.actionGameFragmentToGameOverFragment)
                 }
             }
         }
