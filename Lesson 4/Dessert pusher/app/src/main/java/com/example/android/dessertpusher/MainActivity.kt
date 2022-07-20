@@ -31,7 +31,10 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
-    private var revenue = 0
+    private val KEY_TIMER_SECONDS: String = "key_timer_seconds"
+    private val KEY_AMOUNT_SOLD: String = "key_amount_sold"
+    private val KEY_REVENUE: String = "key_revenue"
+    private var revenue_ = 0
     private var dessertsSold = 0
     private lateinit var dessertTimer: DessertTimer
 
@@ -68,19 +71,31 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("MainActivity", "onCreate called")
+
         // Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         dessertTimer = DessertTimer(this.lifecycle)
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
         }
+        //Проверяем, пустой ли у нас Бандл
+        savedInstanceState?.run {
+            if (this != null){
+                Timber.i("Restore from savedInstanceState")
+                revenue_ = savedInstanceState.getInt(KEY_REVENUE)
+                dessertsSold = savedInstanceState.getInt(KEY_AMOUNT_SOLD)
+                dessertTimer.secondsCount = savedInstanceState.getInt(KEY_TIMER_SECONDS)
+            }
+        }
 
-        // Set the TextViews to the right values
-        binding.revenue = revenue
-        binding.amountSold = dessertsSold
+        binding.apply{
+            // Set the TextViews to the right values
+            revenue = revenue_
+            amountSold = dessertsSold
+            // Make sure the correct dessert is showing
+            dessertButton.setImageResource(currentDessert.imageId)
 
-        // Make sure the correct dessert is showing
-        binding.dessertButton.setImageResource(currentDessert.imageId)
+        }
     }
 
 
@@ -90,14 +105,28 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     private fun onDessertClicked() {
 
         // Update the score
-        revenue += currentDessert.price
+        revenue_ += currentDessert.price
         dessertsSold++
 
-        binding.revenue = revenue
+        binding.revenue = revenue_
         binding.amountSold = dessertsSold
 
         // Show the next dessert
         showCurrentDessert()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.run {
+            putInt(KEY_REVENUE, revenue_)
+            putInt(KEY_AMOUNT_SOLD, dessertsSold)
+            putInt(KEY_TIMER_SECONDS, dessertTimer.secondsCount)
+        }
+        super.onSaveInstanceState(outState)
+        Timber.i("onSaveInstanceState called")
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
     /**
@@ -128,7 +157,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
      */
     private fun onShare() {
         val shareIntent = ShareCompat.IntentBuilder.from(this)
-                .setText(getString(R.string.share_text, dessertsSold, revenue))
+                .setText(getString(R.string.share_text, dessertsSold, revenue_))
                 .setType("text/plain")
                 .intent
         try {
