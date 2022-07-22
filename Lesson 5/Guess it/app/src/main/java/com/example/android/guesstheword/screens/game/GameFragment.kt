@@ -23,9 +23,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
@@ -54,38 +54,49 @@ class GameFragment : Fragment() {
         Log.i("GameFragment", "Called ViewModelProvider")
         //https://developer.android.com/reference/androidx/lifecycle/ViewModelProviders
         //viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
-        setOnClickListeners(binding, viewModel)
-        updateUI()
+        setOnClickListeners(binding)
+        setObservers()
         return binding.root
 
     }
 
-    private fun setOnClickListeners(binding: GameFragmentBinding?, viewModel: GameViewModel) {
+    private fun setOnClickListeners(binding: GameFragmentBinding) {
         binding?.apply {
             btnCorrect.setOnClickListener {
                 viewModel.onCorrect()
-                updateUI()
             }
             btnSkip.setOnClickListener {
                 viewModel.onSkip()
-                updateUI()
             }
         }
     }
 
-    /** Method for updating the UI **/
-    private fun updateUI() {
-        binding.apply {
-            txtvWord.text = viewModel.word
-            txtvScore.text = viewModel.score.toString()
+
+    private fun setObservers() {
+        viewModel.apply {
+            score.observe(this@GameFragment, Observer { newScore ->
+                updateScoreText(newScore) }
+            )
+            word.observe(this@GameFragment, Observer { newWord ->
+                updateScoreWord(newWord)
+            })
         }
+    }
+
+    /** Method for updating the UI **/
+    private fun updateScoreText(score: Int) {
+            binding.txtvScore.text = score.toString()
+    }
+
+    private fun updateScoreWord(word: String) {
+        binding.txtvWord.text = word
     }
 
     /**
      * Called when the game is finished
      */
     private fun gameFinished() {
-        val action = GameFragmentDirections.actionGameToScore(viewModel.score)
+        val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0)
         findNavController(this).navigate(action)
     }
 
