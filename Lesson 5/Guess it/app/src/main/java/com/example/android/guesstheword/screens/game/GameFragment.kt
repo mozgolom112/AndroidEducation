@@ -46,52 +46,25 @@ class GameFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         // Inflate view and obtain an instance of the binding class
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.game_fragment,
-                container,
-                false
-        )
+        binding = DataBindingUtil.inflate(inflater, R.layout.game_fragment,
+                container, false)
 
         resetList()
         nextWord()
-
-        binding.correctButton.setOnClickListener { onCorrect() }
-        binding.skipButton.setOnClickListener { onSkip() }
-        updateScoreText()
-        updateWordText()
+        binding.apply {
+            btnCorrect.setOnClickListener { onCorrect() }
+            btnSkip.setOnClickListener { onSkip() }
+        }
+        updateUI()
         return binding.root
 
     }
-
-    /**
-     * Resets the list of words and randomizes the order
-     */
-    private fun resetList() {
-        wordList = mutableListOf(
-                "queen",
-                "hospital",
-                "basketball",
-                "cat",
-                "change",
-                "snail",
-                "soup",
-                "calendar",
-                "sad",
-                "desk",
-                "guitar",
-                "home",
-                "railway",
-                "zebra",
-                "jelly",
-                "car",
-                "crow",
-                "trade",
-                "bag",
-                "roll",
-                "bubble"
-        )
-        wordList.shuffle()
+    /** Method for updating the UI **/
+    private fun updateUI() {
+        binding.apply{
+            txtvWord.text = word
+            txtvScore.text = score.toString()
+        }
     }
 
     /**
@@ -112,8 +85,7 @@ class GameFragment : Fragment() {
         } else {
             word = wordList.removeAt(0)
         }
-        updateWordText()
-        updateScoreText()
+        updateUI()
     }
 
     /** Methods for buttons presses **/
@@ -128,14 +100,33 @@ class GameFragment : Fragment() {
         nextWord()
     }
 
-    /** Methods for updating the UI **/
-
-    private fun updateWordText() {
-        binding.wordText.text = word
-
-    }
-
-    private fun updateScoreText() {
-        binding.scoreText.text = score.toString()
+    /**
+     * Resets the list of words and randomizes the order
+     */
+    private fun resetList() {
+        wordList = mutableListOf(
+            "queen",
+            "hospital",
+            "basketball",
+            "cat",
+            "change",
+            "snail",
+            "soup",
+            "calendar",
+            "sad",
+            "desk",
+            "guitar",
+            "home",
+            "railway",
+            "zebra",
+            "jelly",
+            "car",
+            "crow",
+            "trade",
+            "bag",
+            "roll",
+            "bubble"
+        )
+        wordList.shuffle()
     }
 }

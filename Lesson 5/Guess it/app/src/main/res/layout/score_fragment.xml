@@ -25,7 +25,7 @@
         tools:context=".screens.score.ScoreFragment">
 
         <TextView
-            android:id="@+id/you_scored_text"
+            android:id="@+id/txtvYouScored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -34,7 +34,7 @@
             android:textColor="@color/black_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@+id/score_text"
+            app:layout_constraintBottom_toTopOf="@+id/txtvScore"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
-            android:id="@+id/score_text"
+            android:id="@+id/txtvScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -51,16 +51,16 @@
             android:textColor="@color/black_text_color"
             android:textSize="34sp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@+id/play_again_button"
+            app:layout_constraintBottom_toTopOf="@+id/btnPlayAgain"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/you_scored_text"
+            app:layout_constraintTop_toBottomOf="@+id/txtvYouScored"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="40" />
 
         <Button
-            android:id="@+id/play_again_button"
+            android:id="@+id/btnPlayAgain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"

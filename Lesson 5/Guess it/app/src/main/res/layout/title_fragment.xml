@@ -25,7 +25,7 @@
         tools:context=".screens.title.TitleFragment">
 
         <TextView
-            android:id="@+id/get_ready_text"
+            android:id="@+id/txtvGetReady"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -35,7 +35,7 @@
             android:textColor="@color/black_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@+id/title_text"
+            app:layout_constraintBottom_toTopOf="@+id/txtvTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
-            android:id="@+id/title_text"
+            android:id="@+id/txtvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -52,15 +52,15 @@
             android:textColor="@color/black_text_color"
             android:textSize="34sp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@+id/play_game_button"
+            app:layout_constraintBottom_toTopOf="@+id/btnPlayGame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/get_ready_text"
+            app:layout_constraintTop_toBottomOf="@+id/txtvGetReady"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <Button
-            android:id="@+id/play_game_button"
+            android:id="@+id/btnPlayGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
