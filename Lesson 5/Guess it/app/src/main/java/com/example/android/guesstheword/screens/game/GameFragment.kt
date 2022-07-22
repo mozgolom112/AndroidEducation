@@ -75,17 +75,24 @@ class GameFragment : Fragment() {
     private fun setObservers() {
         viewModel.apply {
             score.observe(this@GameFragment, Observer { newScore ->
-                updateScoreText(newScore) }
+                updateScoreText(newScore)
+            }
             )
             word.observe(this@GameFragment, Observer { newWord ->
                 updateScoreWord(newWord)
+            })
+            eventGameFinish.observe(this@GameFragment, Observer { hasFinished ->
+                if (hasFinished) {
+                    gameFinished()
+                    onGameFinishComplete()
+                }
             })
         }
     }
 
     /** Method for updating the UI **/
     private fun updateScoreText(score: Int) {
-            binding.txtvScore.text = score.toString()
+        binding.txtvScore.text = score.toString()
     }
 
     private fun updateScoreWord(word: String) {
@@ -96,9 +103,8 @@ class GameFragment : Fragment() {
      * Called when the game is finished
      */
     private fun gameFinished() {
-        val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0)
+        val currentScore = viewModel.score.value ?: 0
+        val action = GameFragmentDirections.actionGameToScore(currentScore)
         findNavController(this).navigate(action)
     }
-
-
 }
