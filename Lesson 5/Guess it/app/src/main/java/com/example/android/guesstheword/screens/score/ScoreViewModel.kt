@@ -25,7 +25,7 @@ class ScoreViewModel(finalScore: Int) : ViewModel() {
         Log.i("ScoreViewModel", "Destroyed")
     }
 
-    fun onPlayButton() {
+    fun onPlayAgainButton() {
         _eventPlayAgain.value = true
     }
 }

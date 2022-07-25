@@ -57,8 +57,9 @@ class ScoreFragment : Fragment() {
             inflater,
             R.layout.score_fragment, container, false
         )
+        binding.scoreViewModel = viewModel
         // Get args using by navArgs property delegate
-        setClickListeners()
+        //setClickListeners()
         setObservers()
 
         return binding.root
@@ -66,7 +67,7 @@ class ScoreFragment : Fragment() {
 
     private fun setClickListeners() {
         binding.apply {
-            btnPlayAgain.setOnClickListener { viewModel.onPlayButton() }
+            btnPlayAgain.setOnClickListener { viewModel.onPlayAgainButton() }
         }
     }
 

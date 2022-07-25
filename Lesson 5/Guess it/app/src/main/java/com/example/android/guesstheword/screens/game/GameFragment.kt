@@ -51,18 +51,18 @@ class GameFragment : Fragment() {
             inflater, R.layout.game_fragment,
             container, false
         )
-
+        binding.gameViewModel = viewModel
         Log.i("GameFragment", "Called ViewModelProvider")
         //https://developer.android.com/reference/androidx/lifecycle/ViewModelProviders
         //viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
-        setOnClickListeners(binding)
+        //setOnClickListeners()
         setObservers()
         return binding.root
 
     }
 
-    private fun setOnClickListeners(binding: GameFragmentBinding) {
-        binding?.apply {
+    private fun setOnClickListeners() {
+        binding.apply {
             btnCorrect.setOnClickListener {
                 viewModel.onCorrect()
             }
