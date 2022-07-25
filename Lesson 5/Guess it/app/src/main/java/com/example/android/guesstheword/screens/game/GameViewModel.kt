@@ -5,6 +5,7 @@ import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
@@ -29,6 +30,10 @@ class GameViewModel : ViewModel() {
     private val _currentTick by lazy { MutableLiveData<Long>() }
     val currentTick: LiveData<Long>
         get() = _currentTick
+
+    val currentTickString = Transformations.map(currentTick) { time ->
+        DateUtils.formatElapsedTime(time)
+    }
 
     // Finish game event
     val eventGameFinish: LiveData<Boolean>

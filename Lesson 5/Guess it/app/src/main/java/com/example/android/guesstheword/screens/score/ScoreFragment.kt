@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -57,7 +58,11 @@ class ScoreFragment : Fragment() {
             inflater,
             R.layout.score_fragment, container, false
         )
-        binding.scoreViewModel = viewModel
+        binding.apply {
+            scoreViewModel = viewModel
+            lifecycleOwner = this@ScoreFragment
+        }
+
         // Get args using by navArgs property delegate
         //setClickListeners()
         setObservers()
@@ -73,10 +78,10 @@ class ScoreFragment : Fragment() {
 
     private fun setObservers() {
         viewModel.apply {
-            score.observe(this@ScoreFragment, Observer { newScore ->
-                Log.i("ScoreFragment", "Observe was called")
-                updateScoreText(newScore)
-            })
+//            score.observe(this@ScoreFragment, Observer { newScore ->
+//                Log.i("ScoreFragment", "Observe was called")
+//                updateScoreText(newScore)
+//            })
             eventPlayAgain.observe(this@ScoreFragment, Observer { hasPlayAgain ->
                 if (hasPlayAgain) {
                     onPlayAgain()

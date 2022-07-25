@@ -52,6 +52,8 @@ class GameFragment : Fragment() {
             container, false
         )
         binding.gameViewModel = viewModel
+        binding.lifecycleOwner = this@GameFragment
+
         Log.i("GameFragment", "Called ViewModelProvider")
         //https://developer.android.com/reference/androidx/lifecycle/ViewModelProviders
         //viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
@@ -75,16 +77,16 @@ class GameFragment : Fragment() {
 
     private fun setObservers() {
         viewModel.apply {
-            score.observe(this@GameFragment, Observer { newScore ->
-                updateScoreText(newScore)
-            }
-            )
-            word.observe(this@GameFragment, Observer { newWord ->
-                updateScoreWord(newWord)
-            })
-            currentTick.observe(this@GameFragment, Observer { newTimeTick ->
-                updateTimerText(newTimeTick)
-            })
+//            score.observe(this@GameFragment, Observer { newScore ->
+//                updateScoreText(newScore)
+//            }
+//            )
+//            word.observe(this@GameFragment, Observer { newWord ->
+//                updateScoreWord(newWord)
+//            })
+//            currentTick.observe(this@GameFragment, Observer { newTimeTick ->
+//                updateTimerText(newTimeTick)
+//            })
             eventGameFinish.observe(this@GameFragment, Observer { hasFinished ->
                 if (hasFinished) {
                     gameFinished()
