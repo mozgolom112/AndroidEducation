@@ -32,6 +32,7 @@ import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.google.android.material.snackbar.Snackbar
 import java.security.Provider
 
 /**
@@ -81,7 +82,13 @@ class SleepTrackerFragment : Fragment() {
             navigateToSleepQuality.observe(viewLifecycleOwner, Observer { night ->
                 navigateToSleepQuality(night)
             })
+            showSnackBarEvent.observe(viewLifecycleOwner, Observer { hasShowen ->
+                if (hasShowen == true) {
+                    showSnackBar()
+                }
+            })
         }
+
     }
 
     private fun navigateToSleepQuality(night: SleepNight?) {
@@ -93,6 +100,16 @@ class SleepTrackerFragment : Fragment() {
             findNavController().navigate(action)
             sleepTrackerViewModel.doneNavigation()
         }
+    }
+
+
+    private fun showSnackBar() {
+        Snackbar.make(
+            requireActivity().findViewById(android.R.id.content),
+            getString(R.string.cleared_message),
+            Snackbar.LENGTH_SHORT
+        ).show()
+        sleepTrackerViewModel.doneSnackBarEvent()
     }
 
     private fun initSleepTrackerViewModel(): SleepTrackerViewModel {
