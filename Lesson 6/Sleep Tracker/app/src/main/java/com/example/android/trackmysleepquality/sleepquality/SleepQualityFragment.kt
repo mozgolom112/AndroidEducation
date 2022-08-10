@@ -22,7 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
 
 /**
@@ -38,15 +44,61 @@ class SleepQualityFragment : Fragment() {
      *
      * This function uses DataBindingUtil to inflate R.layout.fragment_sleep_quality.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    private val sleepQualityViewModel: SleepQualityViewModel by lazy {
+        initSleepQualityViewModel()
+    }
+
+    private fun initSleepQualityViewModel(): SleepQualityViewModel {
+        val application = requireNotNull(this.activity).application
+        val sleepNightKey = navArgs<SleepQualityFragmentArgs>().value.sleepNightKey
+        val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
+        val viewModelFactory = SleepQualityViewModelFactory(sleepNightKey, dataSource)
+        val viewModel: SleepQualityViewModel by viewModels { viewModelFactory }
+
+        return viewModel
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // Get a reference to the binding object and inflate the fragment views.
-        val binding: FragmentSleepQualityBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_sleep_quality, container, false)
-
-        val application = requireNotNull(this.activity).application
-
+        val binding = initBinding(inflater, container)
+        fulfillBinding(binding)
+        setObservers()
         return binding.root
+    }
+
+    private fun initBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSleepQualityBinding =
+        DataBindingUtil.inflate(
+            inflater, R.layout.fragment_sleep_quality, container, false
+        )
+
+    private fun fulfillBinding(binding: FragmentSleepQualityBinding) {
+        binding.apply {
+            sleepQualityViewModel = this@SleepQualityFragment.sleepQualityViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
+
+    private fun setObservers() {
+        sleepQualityViewModel.apply {
+            navigateToSleepTracker.observe(viewLifecycleOwner, Observer { hasNavigate ->
+                if (hasNavigate == true) {
+                    navigateToSleepTracker()
+                }
+            })
+        }
+    }
+
+    private fun navigateToSleepTracker() {
+        val action =
+            SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment()
+        findNavController().navigate(action)
+        sleepQualityViewModel.doneNavigation()
     }
 }

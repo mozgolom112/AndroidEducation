@@ -23,11 +23,14 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
 import java.security.Provider
 
@@ -55,6 +58,7 @@ class SleepTrackerFragment : Fragment() {
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentSleepTrackerBinding = initBinding(inflater, container)
         fulfillBinding(binding)
+        setObservers()
         return binding.root
     }
 
@@ -69,6 +73,25 @@ class SleepTrackerFragment : Fragment() {
         binding.apply {
             this.sleepTrackerViewModel = this@SleepTrackerFragment.sleepTrackerViewModel
             lifecycleOwner = viewLifecycleOwner
+        }
+    }
+
+    private fun setObservers() {
+        sleepTrackerViewModel.apply {
+            navigateToSleepQuality.observe(viewLifecycleOwner, Observer { night ->
+                navigateToSleepQuality(night)
+            })
+        }
+    }
+
+    private fun navigateToSleepQuality(night: SleepNight?) {
+        night?.let {
+            val action =
+                SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(
+                    night.nightID
+                )
+            findNavController().navigate(action)
+            sleepTrackerViewModel.doneNavigation()
         }
     }
 
