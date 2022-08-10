@@ -17,15 +17,112 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
-import androidx.lifecycle.viewModelScope
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.formatNights
+import kotlinx.coroutines.*
 
 /**
  * ViewModel for SleepTrackerFragment.
  */
 class SleepTrackerViewModel(
-        val database: SleepDatabaseDao,
-        application: Application) : AndroidViewModel(application) {
+    val database: SleepDatabaseDao,
+    application: Application
+) : AndroidViewModel(application) {
+
+    private val viewModelJob = Job()
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    private val _tonight = MutableLiveData<SleepNight?>()
+    val tonight: LiveData<SleepNight?>
+        get() = _tonight
+
+    private val nights = database.getAllNights()
+    val nightsString = Transformations.map(nights) { nights ->
+        formatNights(nights, application.resources)
+    }
+
+    init {
+        initializeTonight()
+    }
+
+    private fun initializeTonight() {
+        uiScope.launch {
+            _tonight.value = getTonightFromDatabase()
+        }
+    }
+
+    private suspend fun getTonightFromDatabase(): SleepNight? {
+        return withContext(Dispatchers.IO) {
+            var night = database.getTonight()
+            if (night?.startTimeMilli != night?.endTimeMilli) {
+                night = null
+            }
+            night
+        }
+    }
+
+    fun onStartTrackingClick() {
+        uiScope.launch {
+            val newNight = SleepNight()
+            Log.i("onStartTrackingClick", "Stage0: Before insert")
+            insert(newNight)
+            Log.i("onStartTrackingClick", "Stage3: After insert")
+            _tonight.value = getTonightFromDatabase()
+            Log.i("onStartTrackingClick", "Stage4: Finish update value")
+
+        }
+    }
+
+    private suspend fun insert(night: SleepNight) {
+        withContext(Dispatchers.IO) {
+            Log.i("onStartTrackingClick", "Stage1.1: Start insert")
+            database.insertNight(night)
+            Log.i("onStartTrackingClick", "Stage1.2: Finish insert")
+        }
+    }
+
+    fun onStopTrackingClick() {
+        uiScope.launch {
+            //0) Посмотреть предыдущую ночь
+            val oldNight = _tonight.value ?: return@launch
+            //1) Записать время
+            oldNight.endTimeMilli = System.currentTimeMillis()
+            //2) Вызвать suspend функцию для update записи
+            update(oldNight)
+
+        }
+    }
+
+    private suspend fun update(night: SleepNight) {
+        withContext(Dispatchers.IO) {
+            database.updateNight(night)
+        }
+    }
+
+    fun onClearClick() {
+        uiScope.launch {
+            clear()
+            _tonight.value = null
+        }
+    }
+
+    private suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            database.clearNights()
+        }
+    }
+
 }
 
