@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2018, The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!-- Wrapping the layout into /layout to make it available with data binding. -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Data to make available to the XML via data binding. In this case,
+     the whole ViewModel, so that we can access the LiveData,
+     click handlers, and state variables. -->
+    <data>
+
+        <variable
+            name="sleepQualityViewModel"
+            type="com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModel" />
+    </data>
+
+    <!-- Start of the visible fragment layout using ConstraintLayout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".sleepquality.SleepQualityFragment">
+
+        <TextView
+            android:id="@+id/txtvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginBottom="@dimen/triple_margin"
+            android:fontFamily="@font/roboto"
+            android:text="@string/how_was_hour_sleep"
+            android:textSize="@dimen/title_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/imgvQualityZero"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgvQualityZero"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:contentDescription="@string/quality_0"
+            android:onClick="@{()->sleepQualityViewModel.onSetSleepQualityClick(0)}"
+            app:layout_constraintEnd_toStartOf="@+id/imgvQualityOne"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtvTitle"
+            app:srcCompat="@drawable/ic_sleep_0" />
+
+        <ImageView
+            android:id="@+id/imgvQualityOne"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:contentDescription="@string/quality_1"
+            android:onClick="@{()->sleepQualityViewModel.onSetSleepQualityClick(1)}"
+            app:layout_constraintBottom_toBottomOf="@+id/imgvQualityZero"
+            app:layout_constraintEnd_toStartOf="@+id/imgvQualityTwo"
+            app:layout_constraintStart_toEndOf="@+id/imgvQualityZero"
+            app:srcCompat="@drawable/ic_sleep_1" />
+
+        <ImageView
+            android:id="@+id/imgvQualityTwo"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="@dimen/margin"
+            android:contentDescription="@string/quality_2"
+            android:onClick="@{()->sleepQualityViewModel.onSetSleepQualityClick(2)}"
+            app:layout_constraintBottom_toBottomOf="@+id/imgvQualityOne"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgvQualityOne"
+            app:srcCompat="@drawable/ic_sleep_2" />
+
+        <ImageView
+            android:id="@+id/imgvQualityThree"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:contentDescription="@string/quality_3"
+            android:onClick="@{()->sleepQualityViewModel.onSetSleepQualityClick(3)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgvQualityFour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgvQualityZero"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_sleep_3" />
+
+        <ImageView
+            android:id="@+id/imgvQualityFour"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:contentDescription="@string/quality_4"
+            android:onClick="@{()->sleepQualityViewModel.onSetSleepQualityClick(4)}"
+            app:layout_constraintBottom_toBottomOf="@+id/imgvQualityThree"
+            app:layout_constraintEnd_toStartOf="@+id/imgvQualityFive"
+            app:layout_constraintStart_toEndOf="@+id/imgvQualityThree"
+            app:layout_constraintTop_toTopOf="@+id/imgvQualityThree"
+            app:srcCompat="@drawable/ic_sleep_4" />
+
+        <ImageView
+            android:id="@+id/imgvQualityFive"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="@dimen/margin"
+            android:contentDescription="@string/quality_5"
+            android:onClick="@{()->sleepQualityViewModel.onSetSleepQualityClick(5)}"
+            app:layout_constraintBottom_toBottomOf="@+id/imgvQualityFour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgvQualityFour"
+            app:layout_constraintTop_toTopOf="@+id/imgvQualityFour"
+            app:srcCompat="@drawable/ic_sleep_5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
