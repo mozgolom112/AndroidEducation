@@ -26,6 +26,8 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.database.SleepNight
 import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * These functions create a formatted string that can be set in a TextView.
@@ -47,6 +49,53 @@ fun convertNumericQualityToString(quality: Int, resources: Resources): String {
     return qualityString
 }
 
+/**
+ * These functions create a formatted string that can be set in a TextView.
+ */
+private val ONE_MINUTE_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES)
+private val ONE_HOUR_MILLIS = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
+
+/**
+ * Convert a duration to a formatted string for display.
+ *
+ * Examples:
+ *
+ * 6 seconds on Wednesday
+ * 2 minutes on Monday
+ * 40 hours on Thursday
+ *
+ * @param startTimeMilli the start of the interval
+ * @param endTimeMilli the end of the interval
+ * @param res resources used to load formatted strings
+ */
+fun convertDurationToFormatted(startTimeMilli: Long, endTimeMilli: Long, res: Resources): String {
+    val durationMilli = endTimeMilli - startTimeMilli
+    val weekdayString = SimpleDateFormat("EEEE", Locale.getDefault()).format(startTimeMilli)
+    return when {
+        durationMilli < ONE_MINUTE_MILLIS -> {
+            val seconds = TimeUnit.SECONDS.convert(durationMilli, TimeUnit.MILLISECONDS)
+            res.getString(R.string.seconds_length, seconds, weekdayString)
+        }
+        durationMilli < ONE_HOUR_MILLIS -> {
+            val minutes = TimeUnit.MINUTES.convert(durationMilli, TimeUnit.MILLISECONDS)
+            res.getString(R.string.minutes_length, minutes, weekdayString)
+        }
+        else -> {
+            val hours = TimeUnit.HOURS.convert(durationMilli, TimeUnit.MILLISECONDS)
+            res.getString(R.string.hours_length, hours, weekdayString)
+        }
+    }
+}
+
+fun getImgResByQuality(sleepQuality: Int) = when (sleepQuality) {
+    0 -> R.drawable.ic_sleep_0
+    1 -> R.drawable.ic_sleep_1
+    2 -> R.drawable.ic_sleep_2
+    3 -> R.drawable.ic_sleep_3
+    4 -> R.drawable.ic_sleep_4
+    5 -> R.drawable.ic_sleep_5
+    else -> R.drawable.ic_sleep_active
+}
 
 /**
  * Take the Long milliseconds returned by the system and stored in Room,
@@ -60,7 +109,7 @@ fun convertNumericQualityToString(quality: Int, resources: Resources): String {
 @SuppressLint("SimpleDateFormat")
 fun convertLongToDateString(systemTime: Long): String {
     return SimpleDateFormat("EEEE MMM-dd-yyyy' Time: 'HH:mm")
-            .format(systemTime).toString()
+        .format(systemTime).toString()
 }
 
 /**
@@ -106,4 +155,4 @@ fun formatNights(nights: List<SleepNight>, resources: Resources): Spanned {
     }
 }
 
-class TextItemViewHolder(val textView: TextView): RecyclerView.ViewHolder(textView)
+class TextItemViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
