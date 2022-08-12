@@ -12,6 +12,7 @@ import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.convertDurationToFormatted
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 import com.example.android.trackmysleepquality.getImgResByQuality
 
 class SleepNightAdapter :
@@ -21,30 +22,33 @@ class SleepNightAdapter :
         holder.bind(item)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder.from(parent)
 
-    class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtvQuality: TextView = itemView.findViewById(R.id.txtvQualityString)
-        val txtvLenght: TextView = itemView.findViewById(R.id.txtvSleepLenght)
-        val imgvQuality: ImageView = itemView.findViewById(R.id.imgvQuality)
+    class ViewHolder private constructor(val binding: ListItemSleepNightBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(parent: ViewGroup): ViewHolder = ViewHolder(getBinding(parent))
+
+            private fun getBinding(parent: ViewGroup): ListItemSleepNightBinding {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.list_item_sleep_night, parent, false)
-                return ViewHolder(view)
+                val binding = ListItemSleepNightBinding.inflate(layoutInflater, parent, false)
+                return binding
             }
         }
 
-        fun bind(item: SleepNight) {
+        fun bind(item: SleepNight) = fulfillBinding(item)
+
+        private fun fulfillBinding(night: SleepNight) {
             val res = itemView.context.resources
-            item.apply {
-                txtvLenght.text =
-                    convertDurationToFormatted(startTimeMilli, endTimeMilli, res)
-                txtvQuality.text = convertNumericQualityToString(sleepQuality, res)
-                imgvQuality.setImageResource(getImgResByQuality(sleepQuality))
+            binding.apply {
+                night.apply {
+                    sleepNight = night
+                    txtvSleepLenght.text =
+                        convertDurationToFormatted(startTimeMilli, endTimeMilli, res)
+                    txtvQualityString.text = convertNumericQualityToString(sleepQuality, res)
+                    imgvQuality.setImageResource(getImgResByQuality(sleepQuality))
+                }
             }
         }
     }
@@ -52,7 +56,6 @@ class SleepNightAdapter :
     class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
         override fun areItemsTheSame(oldItem: SleepNight, newItem: SleepNight) =
             oldItem.nightID == newItem.nightID
-
         //Сравнение корректно, так как за нас сделано сравнение в датаклассе
         //под коробкой он сравнивает все поля
         override fun areContentsTheSame(oldItem: SleepNight, newItem: SleepNight) =
