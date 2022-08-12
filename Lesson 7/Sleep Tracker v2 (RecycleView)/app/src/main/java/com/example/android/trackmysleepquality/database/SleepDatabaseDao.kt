@@ -45,6 +45,9 @@ interface SleepDatabaseDao{
     @Delete
     fun deleteNights(nights: List<SleepNight>)
 
+    @Query("DELETE FROM daily_sleep_qualities WHERE night_id = :key")
+    fun deleteNightByKey(key: Long)
+
     //Удалить все записи
     @Query("DELETE FROM daily_sleep_qualities")
     fun clearNights()

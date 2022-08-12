@@ -35,6 +35,7 @@ import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.security.Provider
 
@@ -57,7 +58,27 @@ class SleepTrackerFragment : Fragment() {
     private val sleepNightAdapter: SleepNightAdapter by lazy {
         Log.i("SleepNightAdapter", "SleepNightAdapter was created")
         val clickListener = { nightID: Long ->
-            sleepTrackerViewModel.onSleepNightClicked(nightID)
+            //sleepTrackerViewModel.onSleepNightClicked(nightID)
+            //TODO(Спросить пользователя, уверен ли что он хочет удалить)
+            //TODO(https://material.io/components/dialogs/android#alert-dialog)
+//            var isDelete = false
+//            MaterialAlertDialogBuilder(requireContext())
+//                .setTitle("Удаление записи")
+//                .setMessage("Вы уверены что хотите удалить эту запись (ID: ${nightID})? ")
+//                .setNeutralButton("Вернуться назад") { dialog, which ->
+//                    isDelete = false
+//                }
+//                .setNegativeButton("Отмена") { dialog, which ->
+//                    isDelete = false
+//                }
+//                .setPositiveButton("Удалить") { dialog, which ->
+//                    isDelete = true
+//                }
+//                .show()
+//            if (isDelete) {
+//                sleepTrackerViewModel.onSleepNightDeleteClicked(nightID)
+//            }
+            sleepTrackerViewModel.onSleepNightDeleteClicked(nightID)
         }
         SleepNightAdapter(clickListener)
     }

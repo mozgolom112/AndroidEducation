@@ -165,6 +165,20 @@ class SleepTrackerViewModel(
         }
     }
 
+    fun onSleepNightDeleteClicked(nightID: Long) {
+        uiScope.launch {
+            deleteSleepNightByKey(nightID)
+            if (nightID == _tonight.value?.nightID) {
+                _tonight.value = null
+            }
+        }
+    }
+
+    private suspend fun deleteSleepNightByKey(nightID: Long){
+        withContext(Dispatchers.IO){
+            database.deleteNightByKey(nightID)
+        }
+    }
 
 }
 
