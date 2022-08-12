@@ -78,7 +78,7 @@ class SleepTrackerFragment : Fragment() {
 
     private fun fulfillBinding(binding: FragmentSleepTrackerBinding) {
         binding.apply {
-            this.sleepTrackerViewModel = this@SleepTrackerFragment.sleepTrackerViewModel
+            sleepTrackerViewModel = this@SleepTrackerFragment.sleepTrackerViewModel
             lifecycleOwner = viewLifecycleOwner
             recyclevSleepList.apply {
                 Log.i("SleepNightAdapter","attach SleepNightAdapter to RV")

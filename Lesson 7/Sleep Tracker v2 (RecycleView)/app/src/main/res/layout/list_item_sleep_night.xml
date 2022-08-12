@@ -23,7 +23,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_sleep_5" />
+            app:srcCompat="@drawable/ic_sleep_5"
+            app:sleepImage="@{sleepNight}"/>
 
         <TextView
             android:id="@+id/txtvSleepLenght"
@@ -36,7 +37,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.541"
             app:layout_constraintStart_toEndOf="@+id/imgvQuality"
-            app:layout_constraintTop_toTopOf="@+id/imgvQuality" />
+            app:layout_constraintTop_toTopOf="@+id/imgvQuality"
+            app:sleepDurationFormatted="@{sleepNight}"/>
 
         <TextView
             android:id="@+id/txtvQualityString"
@@ -50,6 +52,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/imgvQuality"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imgvQuality"
-            app:layout_constraintTop_toBottomOf="@+id/txtvSleepLenght" />
+            app:layout_constraintTop_toBottomOf="@+id/txtvSleepLenght"
+            app:sleepQualityString="@{sleepNight}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

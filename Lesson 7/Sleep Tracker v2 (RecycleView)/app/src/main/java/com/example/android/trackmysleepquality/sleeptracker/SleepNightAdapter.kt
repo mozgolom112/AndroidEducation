@@ -40,15 +40,9 @@ class SleepNightAdapter :
         fun bind(item: SleepNight) = fulfillBinding(item)
 
         private fun fulfillBinding(night: SleepNight) {
-            val res = itemView.context.resources
             binding.apply {
-                night.apply {
-                    sleepNight = night
-                    txtvSleepLenght.text =
-                        convertDurationToFormatted(startTimeMilli, endTimeMilli, res)
-                    txtvQualityString.text = convertNumericQualityToString(sleepQuality, res)
-                    imgvQuality.setImageResource(getImgResByQuality(sleepQuality))
-                }
+                sleepNight = night
+                executePendingBindings()
             }
         }
     }
