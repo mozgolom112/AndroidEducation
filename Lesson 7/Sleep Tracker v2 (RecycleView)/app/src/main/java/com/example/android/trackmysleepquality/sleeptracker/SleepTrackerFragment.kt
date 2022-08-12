@@ -56,7 +56,7 @@ class SleepTrackerFragment : Fragment() {
 
     private val sleepNightAdapter: SleepNightAdapter by lazy {
         Log.i("SleepNightAdapter", "SleepNightAdapter was created")
-        val clickListener = SleepNightAdapter.SleepNightListener { nightID ->
+        val clickListener = { nightID: Long ->
             sleepTrackerViewModel.onSleepNightClicked(nightID)
         }
         SleepNightAdapter(clickListener)

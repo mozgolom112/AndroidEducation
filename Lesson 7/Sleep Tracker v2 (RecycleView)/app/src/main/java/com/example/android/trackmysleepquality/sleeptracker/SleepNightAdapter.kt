@@ -18,12 +18,13 @@ import kotlinx.coroutines.withContext
 
 private val ITEM_VIEW_TYPE_HEADER = 0
 private val ITEM_VIEW_TYPE_ITEM = 1
+
 //TODO("Try to use enum class instead of hardcode values")
 //enum class ITEM_VIEW_TYPE{
 //    HEADER, ITEM
 //}
 //TODO(STEP 2. Change in ListAdapter on unified DataItem and provide to accept all ViewHolders)
-class SleepNightAdapter(val clickListener: SleepNightListener) :
+class SleepNightAdapter(val clickListener: (Long) -> Unit) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(SleepNightDiffCallback()) {
     private val adapterScope = CoroutineScope(Dispatchers.Default)
     override fun getItemViewType(position: Int): Int {
@@ -32,6 +33,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
             is DataItem.SleepNightItem -> ITEM_VIEW_TYPE_ITEM
         }
     }
+
     //TODO(STEP 3. Override this method to provided binding separately )
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -43,9 +45,11 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
             //is OtherViewHolder -> {...}
         }
     }
+
     //TODO(STEP 5. Change return type on common RecyclerView.ViewHolder)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         getViewHolder(parent, viewType)
+
     //TODO(STEP 6. Create unique ViewHolder)
     private fun getViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -54,16 +58,17 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
             else -> throw ClassCastException("Unknown viewType ${viewType}")
         }
     }
+
     //TODO(STEP 7. Now you couldn't sumbit list, because you have to combine all DataItem in one list
     //TODO It is better to do in background, so use coroutines here inspired by Dispatchers.default)
     fun addHeaderAndSubmitList(list: List<SleepNight>?) {
         adapterScope.launch {
-            val items = when (list){
+            val items = when (list) {
                 null -> listOf<DataItem>(DataItem.Header)
                 else -> listOf<DataItem>(DataItem.Header) + list.map { DataItem.SleepNightItem(it) }
             }
             //TODO(STEP 8. Dont forget to submit new list of items)
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 submitList(items)
             }
         }
@@ -82,15 +87,15 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
             }
         }
 
-        fun bind(item: SleepNight, clickListener: SleepNightListener) =
+        fun bind(item: SleepNight, clickListener: (Long) -> Unit) =
             fulfillBinding(item, clickListener)
 
-        private fun fulfillBinding(night: SleepNight, clickListener: SleepNightListener) {
+        private fun fulfillBinding(night: SleepNight, clickListener: (Long) -> Unit) {
             binding.apply {
                 sleepNight = night
-                this.clickListener = clickListener
                 executePendingBindings()
             }
+            itemView.setOnClickListener { clickListener(night.nightID) }
         }
     }
 
