@@ -57,7 +57,7 @@ class SleepTrackerFragment : Fragment() {
     private val sleepNightAdapter: SleepNightAdapter by lazy {
         Log.i("SleepNightAdapter", "SleepNightAdapter was created")
         val clickListener = SleepNightAdapter.SleepNightListener { nightID ->
-            Toast.makeText(requireContext(),"${nightID}",Toast.LENGTH_SHORT).show()
+            sleepTrackerViewModel.onSleepNightClicked(nightID)
         }
         SleepNightAdapter(clickListener)
     }
@@ -100,6 +100,10 @@ class SleepTrackerFragment : Fragment() {
             navigateToSleepQuality.observe(viewLifecycleOwner, Observer { night ->
                 navigateToSleepQuality(night)
             })
+
+            navigateToSleepNightDetail.observe(viewLifecycleOwner, Observer { nightID ->
+                navigateToSleepNightDetail(nightID)
+            })
             showSnackBarEvent.observe(viewLifecycleOwner, Observer { hasShowen ->
                 if (hasShowen == true) {
                     showSnackBar()
@@ -110,6 +114,15 @@ class SleepTrackerFragment : Fragment() {
                     sleepNightAdapter.submitList(it)
                 }
             })
+        }
+
+    }
+
+    private fun navigateToSleepNightDetail(nightID: Long?) {
+        nightID?.let{
+            val action = SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepDetailFragment(it)
+            findNavController().navigate(action)
+            sleepTrackerViewModel.onSleepDataDetailNavigated()
         }
 
     }

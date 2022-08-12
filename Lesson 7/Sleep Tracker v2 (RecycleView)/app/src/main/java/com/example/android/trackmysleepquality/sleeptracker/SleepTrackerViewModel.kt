@@ -113,6 +113,18 @@ class SleepTrackerViewModel(
         }
     }
 
+    private val _navigateToSleepNightDetail = MutableLiveData<Long?>()
+    val navigateToSleepNightDetail: LiveData<Long?>
+        get() = _navigateToSleepNightDetail
+
+    fun onSleepNightClicked(nightID: Long) {
+        _navigateToSleepNightDetail.value = nightID
+    }
+
+    fun onSleepDataDetailNavigated() {
+        _navigateToSleepNightDetail.value = null
+    }
+
     private suspend fun insert(night: SleepNight) {
         withContext(Dispatchers.IO) {
             Log.i("onStartTrackingClick", "Stage1.1: Start insert")
@@ -152,6 +164,7 @@ class SleepTrackerViewModel(
             database.clearNights()
         }
     }
+
 
 }
 

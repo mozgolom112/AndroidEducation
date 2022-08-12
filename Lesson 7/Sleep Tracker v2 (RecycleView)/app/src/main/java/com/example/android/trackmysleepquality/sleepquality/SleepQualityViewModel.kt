@@ -16,6 +16,7 @@
 
 package com.example.android.trackmysleepquality.sleepquality
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,17 +46,24 @@ class SleepQualityViewModel(
     }
 
     fun onSetSleepQualityClick(quality: Int) {
+        Log.i("SleepQualityViewModel","OnClick by ${quality} ")
         uiScope.launch {
+            Log.i("SleepQualityViewModel","uiScope was launch")
             updateQuality(quality)
             _navigateToSleepTracker.value = true
         }
     }
 
     private suspend fun updateQuality(quality: Int) {
+        Log.i("SleepQualityViewModel","updateQuality method was called")
         withContext(Dispatchers.IO) {
+            Log.i("SleepQualityViewModel","Into IO with nightKey ${sleepNightKey}")
+            Log.i("SleepQualityViewModel","getNightByID ${database.getNightByKey(sleepNightKey)?.nightID} ")
             val night = database.getNightByKey(sleepNightKey) ?: return@withContext
             night.sleepQuality = quality
+            Log.i("SleepQualityViewModel","Night is ${night.nightID} ")
             database.updateNight(night)
+            Log.i("SleepQualityViewModel","Night was updated")
         }
     }
 }

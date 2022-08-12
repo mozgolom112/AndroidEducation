@@ -29,6 +29,10 @@ interface SleepDatabaseDao{
     @Update
     fun updateNight(night: SleepNight)
 
+    //TODO("Понять почему нельзя из LiveData вытащить поля в SleepQualityViewModel -> updateQuality -> withContext -> db.get")
+    @Query("SELECT * FROM daily_sleep_qualities where night_id = :key")
+    fun getNightByKeyLiveData(key: Long): LiveData<SleepNight>
+
     //Извлечь запись о ночи из БД по ключу
     @Query("SELECT * FROM daily_sleep_qualities WHERE night_id = :key")
     fun getNightByKey(key: Long): SleepNight?

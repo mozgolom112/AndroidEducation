@@ -88,6 +88,7 @@ class SleepQualityFragment : Fragment() {
     private fun setObservers() {
         sleepQualityViewModel.apply {
             navigateToSleepTracker.observe(viewLifecycleOwner, Observer { hasNavigate ->
+
                 if (hasNavigate == true) {
                     navigateToSleepTracker()
                 }
