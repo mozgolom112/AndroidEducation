@@ -21,6 +21,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,6 +29,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
@@ -54,7 +56,10 @@ class SleepTrackerFragment : Fragment() {
 
     private val sleepNightAdapter: SleepNightAdapter by lazy {
         Log.i("SleepNightAdapter", "SleepNightAdapter was created")
-        SleepNightAdapter()
+        val clickListener = SleepNightAdapter.SleepNightListener { nightID ->
+            Toast.makeText(requireContext(),"${nightID}",Toast.LENGTH_SHORT).show()
+        }
+        SleepNightAdapter(clickListener)
     }
 
     override fun onCreateView(
@@ -83,9 +88,12 @@ class SleepTrackerFragment : Fragment() {
             recyclevSleepList.apply {
                 Log.i("SleepNightAdapter","attach SleepNightAdapter to RV")
                 adapter = sleepNightAdapter
+                layoutManager = customManager()
             }
         }
     }
+
+    private fun customManager() = GridLayoutManager(activity, 3)
 
     private fun setObservers() {
         sleepTrackerViewModel.apply {
