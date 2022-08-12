@@ -86,14 +86,23 @@ class SleepTrackerFragment : Fragment() {
             sleepTrackerViewModel = this@SleepTrackerFragment.sleepTrackerViewModel
             lifecycleOwner = viewLifecycleOwner
             recyclevSleepList.apply {
-                Log.i("SleepNightAdapter","attach SleepNightAdapter to RV")
+                Log.i("SleepNightAdapter", "attach SleepNightAdapter to RV")
                 adapter = sleepNightAdapter
                 layoutManager = customManager()
             }
         }
     }
 
-    private fun customManager() = GridLayoutManager(activity, 3)
+    private fun customManager(): GridLayoutManager {
+        val manager = GridLayoutManager(activity, 4)
+        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int) = when (position) {
+                0 -> 4
+                else -> 1
+            }
+        }
+        return manager
+    }
 
     private fun setObservers() {
         sleepTrackerViewModel.apply {
@@ -111,7 +120,7 @@ class SleepTrackerFragment : Fragment() {
             })
             nights.observe(viewLifecycleOwner, Observer { nights ->
                 nights?.let {
-                    sleepNightAdapter.submitList(it)
+                    sleepNightAdapter.addHeaderAndSubmitList(it)
                 }
             })
         }
@@ -119,8 +128,9 @@ class SleepTrackerFragment : Fragment() {
     }
 
     private fun navigateToSleepNightDetail(nightID: Long?) {
-        nightID?.let{
-            val action = SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepDetailFragment(it)
+        nightID?.let {
+            val action =
+                SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepDetailFragment(it)
             findNavController().navigate(action)
             sleepTrackerViewModel.onSleepDataDetailNavigated()
         }
