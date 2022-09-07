@@ -15,7 +15,7 @@
  *
  */
 
-package com.example.android.marsrealestate.overview
+package com.example.android.marsrealestate.overview.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -25,20 +25,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.marsrealestate.databinding.GridViewItemBinding
 import com.example.android.marsrealestate.network.MarsProperty
+import com.example.android.marsrealestate.overview.diffUtils.DiffCallback
+import com.example.android.marsrealestate.overview.viewHolders.MarsPropertyViewHolder
 
 private val ITEM_VIEW_TYPE_ITEM = 1
 
 
 class PhotoGridAdapter(private val clickListener: onClickListener) :
-    ListAdapter<MarsProperty, RecyclerView.ViewHolder>(MarsPropertyDiffCallback) {
-    companion object MarsPropertyDiffCallback : DiffUtil.ItemCallback<MarsProperty>() {
-        override fun areItemsTheSame(oldItem: MarsProperty, newItem: MarsProperty): Boolean =
-            oldItem === newItem
+    ListAdapter<MarsProperty, RecyclerView.ViewHolder>(DiffCallback) {
 
-        override fun areContentsTheSame(oldItem: MarsProperty, newItem: MarsProperty): Boolean =
-            oldItem.id == newItem.id
-
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         getViewHolder(parent, viewType)
@@ -66,30 +61,6 @@ class PhotoGridAdapter(private val clickListener: onClickListener) :
                         clickListener.onClick(marsProperty)
                     }
                 }
-            }
-        }
-    }
-
-    class MarsPropertyViewHolder private constructor(private val binding: GridViewItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        companion object {
-            fun from(parent: ViewGroup): MarsPropertyViewHolder =
-                MarsPropertyViewHolder(getBinding(parent))
-
-            private fun getBinding(parent: ViewGroup): GridViewItemBinding {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = GridViewItemBinding.inflate(layoutInflater, parent, false)
-                return binding
-            }
-        }
-
-        fun bind(item: MarsProperty) =
-            fulfillBinding(item)
-
-        private fun fulfillBinding(item: MarsProperty,) {
-            binding.apply {
-                property = item
-                executePendingBindings()
             }
         }
     }

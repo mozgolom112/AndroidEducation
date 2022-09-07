@@ -36,11 +36,9 @@ private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
-    //.addCallAdapterFactory(CoroutineCallAdapterFactory())
     .build()
 
 interface MarsApiService {

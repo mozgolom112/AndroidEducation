@@ -28,6 +28,7 @@ import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentOverviewBinding
 import com.example.android.marsrealestate.network.MarsApiFilter
 import com.example.android.marsrealestate.network.MarsProperty
+import com.example.android.marsrealestate.overview.adapters.PhotoGridAdapter
 import com.google.android.material.snackbar.Snackbar
 
 /**
