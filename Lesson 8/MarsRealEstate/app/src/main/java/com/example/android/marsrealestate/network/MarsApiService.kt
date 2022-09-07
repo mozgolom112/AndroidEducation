@@ -37,13 +37,13 @@ private val moshi = Moshi.Builder()
 private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    //.addCallAdapterFactory(CoroutineCallAdapterFactory())
     .build()
 
 interface MarsApiService {
     @GET("realestate")
-    fun getPropertiesAsync():
-            Deferred< List<MarsProperty>>
+    suspend fun getPropertiesAsync():
+            List<MarsProperty>
 }
 
 object MarsApi {

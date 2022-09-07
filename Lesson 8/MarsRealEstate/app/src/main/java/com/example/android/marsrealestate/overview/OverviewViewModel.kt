@@ -56,12 +56,15 @@ class OverviewViewModel : ViewModel() {
      */
     private fun getMarsRealEstateProperties() =
         coroutineScope.launch {
-            var getPropertyDeferred = MarsApi.retrofitService.getPropertiesAsync()
             try {
-                var listResult = getPropertyDeferred.await()
+                /**
+                 * The Retrofit service returns a coroutine Deferred, which we await to get
+                 * the result of the transaction.
+                 */
+                var listResult = MarsApi.retrofitService.getPropertiesAsync()
                 _response.value = "Success: ${listResult?.size} Mars properties retrieved"
 
-            } catch (e: Throwable){
+            } catch (e: Throwable) {
                 _response.value = "Failure: ${e.message}"
             }
         }
