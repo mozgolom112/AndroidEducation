@@ -20,6 +20,7 @@ package com.example.android.marsrealestate.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
 import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.CoroutineScope
@@ -33,9 +34,6 @@ import retrofit2.Response
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
 class OverviewViewModel : ViewModel() {
-
-    private var viewModelJob = Job()
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _response = MutableLiveData<String>()
@@ -55,7 +53,7 @@ class OverviewViewModel : ViewModel() {
      * Sets the value of the status LiveData to the Mars API status.
      */
     private fun getMarsRealEstateProperties() =
-        coroutineScope.launch {
+        viewModelScope.launch {
             try {
                 /**
                  * The Retrofit service returns a coroutine Deferred, which we await to get
@@ -68,9 +66,4 @@ class OverviewViewModel : ViewModel() {
                 _response.value = "Failure: ${e.message}"
             }
         }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
 }
