@@ -22,6 +22,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.marsrealestate.network.MarsApi
 import com.example.android.marsrealestate.network.MarsProperty
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
@@ -29,6 +33,9 @@ import retrofit2.Response
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
 class OverviewViewModel : ViewModel() {
+
+    private var viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _response = MutableLiveData<String>()
@@ -47,20 +54,20 @@ class OverviewViewModel : ViewModel() {
     /**
      * Sets the value of the status LiveData to the Mars API status.
      */
-    private fun getMarsRealEstateProperties() {
-        MarsApi.retrofitService.getProperties()
-            .enqueue(object : retrofit2.Callback<List<MarsProperty>> {
-                override fun onResponse(
-                    call: Call<List<MarsProperty>>,
-                    response: Response<List<MarsProperty>>
-                ) {
-                    _response.value = "Success: ${response.body()?.size} Mars properties retrieved"
-                }
+    private fun getMarsRealEstateProperties() =
+        coroutineScope.launch {
+            var getPropertyDeferred = MarsApi.retrofitService.getPropertiesAsync()
+            try {
+                var listResult = getPropertyDeferred.await()
+                _response.value = "Success: ${listResult?.size} Mars properties retrieved"
 
-                override fun onFailure(call: Call<List<MarsProperty>>, t: Throwable) {
-                    _response.value = "Failure " + t.message
-                }
+            } catch (e: Throwable){
+                _response.value = "Failure: ${e.message}"
+            }
+        }
 
-            })
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 }
