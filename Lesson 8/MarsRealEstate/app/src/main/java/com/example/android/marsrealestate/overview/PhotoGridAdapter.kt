@@ -29,7 +29,7 @@ import com.example.android.marsrealestate.network.MarsProperty
 private val ITEM_VIEW_TYPE_ITEM = 1
 
 
-class PhotoGridAdapter(val clickListener: (String) -> Unit) :
+class PhotoGridAdapter(private val clickListener: onClickListener) :
     ListAdapter<MarsProperty, RecyclerView.ViewHolder>(MarsPropertyDiffCallback) {
     companion object MarsPropertyDiffCallback : DiffUtil.ItemCallback<MarsProperty>() {
         override fun areItemsTheSame(oldItem: MarsProperty, newItem: MarsProperty): Boolean =
@@ -60,7 +60,12 @@ class PhotoGridAdapter(val clickListener: (String) -> Unit) :
         when (holder) {
             is MarsPropertyViewHolder -> {
                 val marsProperty = getItem(position)
-                holder.bind(marsProperty, clickListener)
+                holder.apply {
+                    bind(marsProperty)
+                    itemView.setOnClickListener{
+                        clickListener.onClick(marsProperty)
+                    }
+                }
             }
         }
     }
@@ -78,15 +83,18 @@ class PhotoGridAdapter(val clickListener: (String) -> Unit) :
             }
         }
 
-        fun bind(item: MarsProperty, clickListener: (String) -> Unit) =
-            fulfillBinding(item, clickListener)
+        fun bind(item: MarsProperty) =
+            fulfillBinding(item)
 
-        private fun fulfillBinding(item: MarsProperty, clickListener: (String) -> Unit) {
+        private fun fulfillBinding(item: MarsProperty,) {
             binding.apply {
                 property = item
                 executePendingBindings()
             }
-            itemView.setOnClickListener { clickListener(item.id) }
         }
+    }
+
+    class onClickListener(val clickListener: (MarsProperty)->Unit) {
+        fun onClick(marsProperty: MarsProperty) = clickListener(marsProperty)
     }
 }

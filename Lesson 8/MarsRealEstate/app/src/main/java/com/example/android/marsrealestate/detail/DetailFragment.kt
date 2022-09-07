@@ -24,6 +24,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 import com.example.android.marsrealestate.network.MarsProperty
@@ -32,17 +33,17 @@ import com.example.android.marsrealestate.network.MarsProperty
  * This [Fragment] will show the detailed information about a selected piece of Mars real estate.
  */
 class DetailFragment : Fragment() {
-//    private val detailViewModel by lazy {
-//        initDetailViewModel()
-//    }
-//
-//    private fun initDetailViewModel(): DetailViewModel {
-//        val application = requireNotNull(this.activity).application
-//        val marsProperty = MarsProperty()
-//        val viewModelFactory = DetailViewModelFactory(marsProperty, application)
-//        val viewModel: DetailViewModel by viewModels { viewModelFactory }
-//        return viewModel
-//    }
+    private val detailViewModel by lazy {
+        initDetailViewModel()
+    }
+
+    private fun initDetailViewModel(): DetailViewModel {
+        val application = requireNotNull(this.activity).application
+        val marsProperty = navArgs<DetailFragmentArgs>().value.marsProperty
+        val viewModelFactory = DetailViewModelFactory(marsProperty, application)
+        val viewModel: DetailViewModel by viewModels { viewModelFactory }
+        return viewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +62,7 @@ class DetailFragment : Fragment() {
 
     private fun fulfillBinding(binding: FragmentDetailBinding) {
         binding.apply {
-            //viewModel = this@DetailFragment.detailViewModel
+            viewModel = this@DetailFragment.detailViewModel
             lifecycleOwner = viewLifecycleOwner
         }
     }

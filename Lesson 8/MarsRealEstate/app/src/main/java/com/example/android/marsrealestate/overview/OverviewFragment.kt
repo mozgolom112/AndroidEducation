@@ -23,8 +23,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentOverviewBinding
+import com.example.android.marsrealestate.network.MarsProperty
 import com.google.android.material.snackbar.Snackbar
 
 /**
@@ -40,9 +42,9 @@ class OverviewFragment : Fragment() {
     }
 
     private val photoGridAdapter: PhotoGridAdapter by lazy {
-        val clickListener = {propertyId: String ->
-            overviewViewModel.onPropertyClicked(propertyId)
-        }
+        val clickListener = PhotoGridAdapter.onClickListener({
+            overviewViewModel.displayPropertyDetails(it)
+        })
         PhotoGridAdapter(clickListener)
     }
 
@@ -86,10 +88,8 @@ class OverviewFragment : Fragment() {
 
     private fun setObservers() {
         overviewViewModel.apply {
-            propertyIdClicked.observe(viewLifecycleOwner, Observer { propertyId ->
-                propertyId?.let {
-                    showSnackBar(it)
-                }
+            navigateToSelectedProperty.observe(viewLifecycleOwner, Observer { property ->
+                navigateToPropertyDetails(property)
             })
         }
     }
@@ -100,6 +100,15 @@ class OverviewFragment : Fragment() {
             snackBarText,
             Snackbar.LENGTH_SHORT
         ).show()
+    }
+
+    private fun navigateToPropertyDetails(property: MarsProperty?){
+        property?.let {
+            val action = OverviewFragmentDirections.actionShowDetail(property)
+            findNavController().navigate(action)
+            overviewViewModel.displayPropertyDetailsComplete()
+        }
+
     }
 
     /**
