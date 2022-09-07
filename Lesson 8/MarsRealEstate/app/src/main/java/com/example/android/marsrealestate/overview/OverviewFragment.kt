@@ -22,9 +22,10 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.android.marsrealestate.R
 import com.example.android.marsrealestate.databinding.FragmentOverviewBinding
-import com.example.android.marsrealestate.databinding.GridViewItemBinding
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * This fragment shows the the status of the Mars real-estate web services transaction.
@@ -36,6 +37,13 @@ class OverviewFragment : Fragment() {
      */
     private val overviewViewModel: OverviewViewModel by lazy {
         initOverviewViewModel()
+    }
+
+    private val photoGridAdapter: PhotoGridAdapter by lazy {
+        val clickListener = {propertyId: String ->
+            overviewViewModel.onPropertyClicked(propertyId)
+        }
+        PhotoGridAdapter(clickListener)
     }
 
     private fun initOverviewViewModel(): OverviewViewModel {
@@ -54,6 +62,7 @@ class OverviewFragment : Fragment() {
     ): View? {
         val binding = initBinding(inflater, container)
         fulfillBinding(binding)
+        setObservers()
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -61,18 +70,37 @@ class OverviewFragment : Fragment() {
     private fun initBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): GridViewItemBinding =
-        DataBindingUtil.inflate(inflater, R.layout.grid_view_item, container, false)
+    ): FragmentOverviewBinding =
+        DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false)
 
-    private fun fulfillBinding(binding: GridViewItemBinding) {
+    private fun fulfillBinding(binding: FragmentOverviewBinding) {
         binding.apply {
             // Giving the binding access to the OverviewViewModel
             viewModel = this@OverviewFragment.overviewViewModel
             // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
+            recycleviewPhotosGrid.adapter = photoGridAdapter
             lifecycleOwner = viewLifecycleOwner
         }
     }
 
+
+    private fun setObservers() {
+        overviewViewModel.apply {
+            propertyIdClicked.observe(viewLifecycleOwner, Observer { propertyId ->
+                propertyId?.let {
+                    showSnackBar(it)
+                }
+            })
+        }
+    }
+
+    private fun showSnackBar(snackBarText: String) {
+        Snackbar.make(
+            requireActivity().findViewById(android.R.id.content),
+            snackBarText,
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
 
     /**
      * Inflates the overflow menu that contains filtering options.
