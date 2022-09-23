@@ -21,7 +21,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.android.devbyteviewer.domain.Video
 import com.example.android.devbyteviewer.network.Network
-import com.example.android.devbyteviewer.network.asDomainModel
+import com.example.android.devbyteviewer.util.asDomainModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

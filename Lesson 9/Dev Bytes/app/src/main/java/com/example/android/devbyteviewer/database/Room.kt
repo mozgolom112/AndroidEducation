@@ -16,3 +16,43 @@
  */
 
 package com.example.android.devbyteviewer.database
+
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.room.*
+
+
+@Dao
+interface VideoDao {
+    @Query("select * from videos")
+    fun getVideos(): LiveData<List<DatabaseVideo>> //Не забывай оборачивать в LiveData (или позже используй Flow)
+    //Это необхоимо чтобы это не висело на UI потоке и автоматически закидывалось в background
+    //Также ее легче обзервить observe
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(vararg videos: DatabaseVideo)
+}
+
+@Database(entities = [DatabaseVideo::class], version = 1, exportSchema = false)
+abstract class VideoDatabase : RoomDatabase() {
+    abstract val videoDao: VideoDao
+
+    companion object {
+        //Применяем паттерн Singleton
+        private lateinit var INSTANCE: VideoDatabase
+
+        fun getInstance(context: Context): VideoDatabase {
+            //Не забывай оборачивать тут в корутину, чтобы сделать создание инстанса потокобезопасным (thread safe)
+            //Замком (lock) может быть что угодно
+            synchronized(VideoDatabase::class) {
+                if (!::INSTANCE.isInitialized) {
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        VideoDatabase::class.java, "videos"
+                    ).build()
+                }
+            }
+            return INSTANCE
+        }
+    }
+}
