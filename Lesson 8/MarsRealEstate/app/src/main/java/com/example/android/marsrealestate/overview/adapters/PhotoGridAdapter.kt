@@ -23,7 +23,7 @@ import com.example.android.marsrealestate.network.MarsProperty
 import com.example.android.marsrealestate.overview.diffUtils.DiffCallback
 import com.example.android.marsrealestate.overview.viewHolders.MarsPropertyViewHolder
 
-class PhotoGridAdapter(private val clickListener: onClickListener) :
+class PhotoGridAdapter(private val clickListener: OnItemClickListener) :
     ListAdapter<MarsProperty, MarsPropertyViewHolder>(DiffCallback) {
 
 
@@ -43,7 +43,7 @@ class PhotoGridAdapter(private val clickListener: onClickListener) :
         }
     }
 
-    class onClickListener(val clickListener: (MarsProperty) -> Unit) {
+    class OnItemClickListener(val clickListener: (MarsProperty) -> Unit) {
         fun onClick(marsProperty: MarsProperty) = clickListener(marsProperty)
     }
 }

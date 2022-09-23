@@ -44,7 +44,7 @@ class OverviewFragment : Fragment() {
     }
 
     private val photoGridAdapter: PhotoGridAdapter by lazy {
-        val clickListener = PhotoGridAdapter.onClickListener {
+        val clickListener = PhotoGridAdapter.OnItemClickListener {
             overviewViewModel.displayPropertyDetails(it)
         }
         PhotoGridAdapter(clickListener)
