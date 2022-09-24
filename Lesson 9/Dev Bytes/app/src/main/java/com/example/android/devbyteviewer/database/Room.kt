@@ -17,9 +17,11 @@
 
 package com.example.android.devbyteviewer.database
 
+import android.app.appsearch.SetSchemaResponse
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.room.migration.Migration
 
 
 @Dao
@@ -49,7 +51,9 @@ abstract class VideoDatabase : RoomDatabase() {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
                         VideoDatabase::class.java, "videos"
-                    ).build()
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
                 }
             }
             return INSTANCE

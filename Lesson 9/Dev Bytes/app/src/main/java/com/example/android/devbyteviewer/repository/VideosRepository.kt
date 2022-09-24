@@ -16,3 +16,34 @@
  */
 
 package com.example.android.devbyteviewer.repository
+
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import com.example.android.devbyteviewer.database.VideoDatabase
+import com.example.android.devbyteviewer.domain.Video
+import com.example.android.devbyteviewer.network.Network
+import com.example.android.devbyteviewer.util.asDatabaseModel
+import com.example.android.devbyteviewer.util.asDomainModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class VideosRepository(private val database: VideoDatabase) {
+    //Transformations.map is perfect for mapping the output of one LiveData to another type.
+    val videos: LiveData<List<Video>> = Transformations.map(database.videoDao.getVideos()) {
+        it.asDomainModel()
+    }
+
+    suspend fun refreshVideos() {
+        withContext(Dispatchers.IO) {
+            val playlist = Network.devbytes.getPlaylist().await()
+            //Note the asterisk * is the spread operator.
+            //It allows you to pass in an array to a function that expects varargs.
+            //https://kotlinlang.org/docs/functions.html#variable-number-of-arguments-varargs
+            //https://kotlinlang.org/docs/functions.html#named-arguments
+            database.videoDao.insertAll(*playlist.asDatabaseModel())
+        }
+    }
+
+
+}
