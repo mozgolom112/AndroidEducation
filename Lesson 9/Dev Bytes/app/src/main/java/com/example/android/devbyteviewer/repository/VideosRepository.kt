@@ -34,14 +34,16 @@ class VideosRepository(private val database: VideoDatabase) {
         it.asDomainModel()
     }
 
-    suspend fun refreshVideos() {
-        withContext(Dispatchers.IO) {
+    suspend fun refreshVideos() = withContext(Dispatchers.IO) {
+        try {
             val playlist = Network.devbytes.getPlaylist().await()
             //Note the asterisk * is the spread operator.
             //It allows you to pass in an array to a function that expects varargs.
             //https://kotlinlang.org/docs/functions.html#variable-number-of-arguments-varargs
             //https://kotlinlang.org/docs/functions.html#named-arguments
             database.videoDao.insertAll(*playlist.asDatabaseModel())
+        } catch (e: Exception) {
+            Log.e("DevByteViewModel", "Updated playlist not available $e")
         }
     }
 
