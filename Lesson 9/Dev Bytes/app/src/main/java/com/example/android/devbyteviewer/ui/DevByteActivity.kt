@@ -19,14 +19,21 @@ package com.example.android.devbyteviewer.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.android.devbyteviewer.R
+import com.example.android.devbyteviewer.work.RefreshDataWorker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 /**
  * This is a single activity application that uses the Navigation library. Content is displayed
  * by Fragments.
  */
 class DevByteActivity : AppCompatActivity() {
-
     /**
      * Called when the activity is starting.  This is where most initialization
      * should go

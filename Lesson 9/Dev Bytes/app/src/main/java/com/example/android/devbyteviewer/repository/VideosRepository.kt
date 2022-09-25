@@ -27,6 +27,7 @@ import com.example.android.devbyteviewer.util.asDatabaseModel
 import com.example.android.devbyteviewer.util.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class VideosRepository(private val database: VideoDatabase) {
     //Transformations.map is perfect for mapping the output of one LiveData to another type.
@@ -44,6 +45,7 @@ class VideosRepository(private val database: VideoDatabase) {
             database.videoDao.insertAll(*playlist.asDatabaseModel())
         } catch (e: Exception) {
             Log.e("DevByteViewModel", "Updated playlist not available $e")
+            throw(e)
         }
     }
 

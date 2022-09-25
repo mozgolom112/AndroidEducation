@@ -49,7 +49,12 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         viewModelScope.launch {
-            repository.refreshVideos()
+            try {
+                repository.refreshVideos()
+            }
+            catch (e: Exception){
+                //Нет интернет соединения
+            }
         }
     }
 

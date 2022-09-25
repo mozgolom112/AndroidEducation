@@ -17,6 +17,7 @@
 
 package com.example.android.devbyteviewer.util
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -27,6 +28,7 @@ import com.bumptech.glide.Glide
  */
 @BindingAdapter("goneIfNotNull")
 fun goneIfNotNull(view: View, it: Any?) {
+    Log.i("View", "${it == null}")
     view.visibility = if (it != null) View.GONE else View.VISIBLE
 }
 
